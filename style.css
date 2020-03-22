@@ -95,3 +95,13 @@ thead {
     background-color: #405f77;
     color: #ffffff;
 }
+
+.content__button {
+    float: right;
+    margin-top: 80px;
+    background-color: #eb35a3;
+    color: #ffffff;
+    padding: 8px 40px;
+    border: none;
+    border-radius: 3px;
+}
