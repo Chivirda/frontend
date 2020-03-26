@@ -1,9 +1,14 @@
 const legalEntity = './legalentity.json'
 const pharmacies = './pharmacy.json'
+
 const tbody = document.querySelector('tbody')
-let legalEntityID = 0
+const contentHead = document.querySelector('.content__head')
+const firstColumnName = document.querySelector('#firstColumnName')
+const FIRST_STEP_HEADER = '1: Select Legal Entity'
+const FIRST_COLUMN_NAME_STEP_1 = 'Legal Entity'
     
 function showEntities(entities) {
+    firstColumnName.innerHTML = FIRST_COLUMN_NAME_STEP_1
     
     console.log(entities);
 
@@ -19,15 +24,15 @@ function showEntities(entities) {
         city.textContent = entities[i].city
         country.textContent = entities[i].country
 
-        tr.appendChild(name)
-        tr.appendChild(address)
-        tr.appendChild(city)
-        tr.appendChild(country)
+        tr.append(name)
+        tr.append(address)
+        tr.append(city)
+        tr.append(country)
         tr.setAttribute('data-id', entities[i].legalEntityID)
         tr.classList.add('row')
         tr.firstChild.insertAdjacentHTML('afterbegin', '<i class="fa fa-check" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp;&nbsp;')
 
-        tbody.appendChild(tr)
+        tbody.append(tr)
         
     }    
 }
@@ -40,7 +45,7 @@ function onTableClickHandler() {
         row.onclick = function() {
             this.classList.toggle('active')
             
-            legalEntityID = this.dataset.id
+            const legalEntityID = +this.dataset.id
             onSelectButtonHandler(pharmacies, legalEntityID)
 
         }
@@ -51,9 +56,7 @@ function onTableClickHandler() {
 
 
 function onSelectButtonHandler(pharmacies, legalEntityID) {
-    console.log('Legal Entity ID:', legalEntityID);
-    
-
+    const SECOND_STEP_HEADER = '2: Select Pharmacies'
     const selectButton = document.querySelector('.content__button')
 
     selectButton.addEventListener('click', () => {
@@ -61,45 +64,50 @@ function onSelectButtonHandler(pharmacies, legalEntityID) {
             return
         }
 
+        contentHead.innerHTML = SECOND_STEP_HEADER
         fetch(pharmacies)
             .then(response => response.json())
-            .then(pharmacy => showPharmacies(pharmacy))
+            .then(pharmacy => showPharmacies(pharmacy, legalEntityID))
 
     })
 
 }
 
 function showPharmacies(pharmacy, legalEntityID) {
-    tbody.children.remove
+    FIRST_COLUMN_NAME_STEP_2 = 'Pharmacy'
+    firstColumnName.innerHTML = FIRST_COLUMN_NAME_STEP_2
+    tbody.innerHTML = ''
+    
+    for (let pharm of pharmacy) {
 
-    for (let i = 0; i < pharmacy.length; i++) {
-
-        if (pharmacy.legalEntityID === legalEntityID) {
+        if (pharm.legalEntityID === legalEntityID) {
             const tr = document.createElement('tr')
             const name = document.createElement('td')
             const address = document.createElement('td')
             const city = document.createElement('td')
             const country = document.createElement('td')
 
-            name.textContent = pharmacy[i].pharmaName
-            address.textContent = pharmacy[i].address_1 + ' ' + pharmacy[i].address_2
-            city.textContent = pharmacy[i].city
-            country.textContent = pharmacy[i].country
+            name.textContent = pharm.pharmaName
+            address.textContent = pharm.address_1 + ' ' + pharm.address_2
+            city.textContent = pharm.city
+            country.textContent = pharm.country
 
-            tr.appendChild(name)
-            tr.appendChild(address)
-            tr.appendChild(city)
-            tr.appendChild(country)
-            tr.setAttribute('data-id', pharmacy[i].pharmaID)
+            tr.append(name)
+            tr.append(address)
+            tr.append(city)
+            tr.append(country)
+            tr.setAttribute('data-id', pharm.pharmaID)
             tr.classList.add('row')
             tr.firstChild.insertAdjacentHTML('afterbegin', '<i class="fa fa-check" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp;&nbsp;')
-
-            tbody.appendChild(tr)
+            
+            tbody.append(tr)
         }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    contentHead.innerHTML = FIRST_STEP_HEADER
+
     fetch(legalEntity)
         .then(response => response.json())
         .then(entities => showEntities(entities))
