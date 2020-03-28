@@ -7,6 +7,16 @@ const firstColumnName = document.querySelector('#firstColumnName')
 const FIRST_STEP_HEADER = '1: Select Legal Entity'
 const FIRST_COLUMN_NAME_STEP_1 = 'Legal Entity'
 const divContent = document.querySelector('.content')
+
+document.addEventListener('DOMContentLoaded', () => {
+    contentHead.innerHTML = FIRST_STEP_HEADER
+
+    fetch(legalEntity)
+        .then(response => response.json())
+        .then(entities => showEntities(entities))
+        .then(() => onTableClickHandler())
+    
+})
     
 function showEntities(entities) {
     firstColumnName.innerHTML = FIRST_COLUMN_NAME_STEP_1
@@ -54,13 +64,13 @@ function onTableClickHandler() {
 
 }
 
-
-
 function onSelectButtonHandler(pharmacies, legalEntityID) {
     const SECOND_STEP_HEADER = '2: Select Pharmacies'
     const selectButton = document.querySelector('.content__button')
 
     selectButton.addEventListener('click', () => {
+        const backButton = document.querySelector('.content__button-back')
+
         if (legalEntityID === 0 || legalEntityID === undefined) {
             return
         }
@@ -70,8 +80,11 @@ function onSelectButtonHandler(pharmacies, legalEntityID) {
         fetch(pharmacies)
             .then(response => response.json())
             .then(pharmacy => showPharmacies(pharmacy, legalEntityID))
-            .then(() => addBackButton())
+            .then(() => onTableClickHandler())
 
+        if (!backButton) {
+            addBackButton()
+        }
     })
 
 }
@@ -120,12 +133,4 @@ function addBackButton() {
     divContent.append(backButton)
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    contentHead.innerHTML = FIRST_STEP_HEADER
 
-    fetch(legalEntity)
-        .then(response => response.json())
-        .then(entities => showEntities(entities))
-        .then(() => onTableClickHandler())
-    
-})
