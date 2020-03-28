@@ -6,6 +6,7 @@ const contentHead = document.querySelector('.content__head')
 const firstColumnName = document.querySelector('#firstColumnName')
 const FIRST_STEP_HEADER = '1: Select Legal Entity'
 const FIRST_COLUMN_NAME_STEP_1 = 'Legal Entity'
+const divContent = document.querySelector('.content')
     
 function showEntities(entities) {
     firstColumnName.innerHTML = FIRST_COLUMN_NAME_STEP_1
@@ -65,9 +66,11 @@ function onSelectButtonHandler(pharmacies, legalEntityID) {
         }
 
         contentHead.innerHTML = SECOND_STEP_HEADER
+        selectButton.innerHTML = 'Enter Contract Terms'
         fetch(pharmacies)
             .then(response => response.json())
             .then(pharmacy => showPharmacies(pharmacy, legalEntityID))
+            .then(() => addBackButton())
 
     })
 
@@ -103,6 +106,18 @@ function showPharmacies(pharmacy, legalEntityID) {
             tbody.append(tr)
         }
     }
+
+}
+
+function addBackButton() {
+    console.log('addBackButton');
+    
+
+    const backButton = document.createElement('button')
+    backButton.classList.add('content__button-back')
+    backButton.innerText = 'Back'
+
+    divContent.append(backButton)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
