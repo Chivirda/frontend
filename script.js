@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(legalEntity)
         .then(response => response.json())
         .then(entities => showEntities(entities))
-        .then(() => onTableClickHandler())
+        .then(() => onEntitiesClickHandler())
     
 })
     
@@ -48,23 +48,57 @@ function showEntities(entities) {
     }    
 }
 
-function onTableClickHandler() {
+function onEntitiesClickHandler() {
 
     const rows = document.querySelectorAll('.row')
 
     for (let row of rows) {
         row.onclick = function() {
+            for (let children of rows) {
+                children.classList.remove('active')
+            }
             this.classList.toggle('active')
             
             const legalEntityID = +this.dataset.id
-            onSelectButtonHandler(pharmacies, legalEntityID)
+            selectEntity(pharmacies, legalEntityID)
 
         }
     }
 
 }
 
-function onSelectButtonHandler(pharmacies, legalEntityID) {
+function onPharmacyClickHandler() {
+
+    const rows = document.querySelectorAll('.row')
+    
+    for (let row of rows) {
+        row.onclick = function() {
+            
+            this.classList.toggle('active')
+            
+            
+        }
+    }
+    
+    enterContractTerms()
+}
+
+function selectActiveRows() {
+    
+}
+
+function enterContractTerms(activeRows) {
+    const selectButton = document.querySelector('.content__button')
+    
+    selectButton.addEventListener('click', () => {
+        console.log('Active rows:', activeRows);
+        
+    })
+    
+    
+}
+
+function selectEntity(pharmacies, legalEntityID) {
     const SECOND_STEP_HEADER = '2: Select Pharmacies'
     const selectButton = document.querySelector('.content__button')
 
@@ -80,7 +114,7 @@ function onSelectButtonHandler(pharmacies, legalEntityID) {
         fetch(pharmacies)
             .then(response => response.json())
             .then(pharmacy => showPharmacies(pharmacy, legalEntityID))
-            .then(() => onTableClickHandler())
+            .then(() => onPharmacyClickHandler())
 
         if (!backButton) {
             addBackButton()
@@ -123,9 +157,6 @@ function showPharmacies(pharmacy, legalEntityID) {
 }
 
 function addBackButton() {
-    console.log('addBackButton');
-    
-
     const backButton = document.createElement('button')
     backButton.classList.add('content__button-back')
     backButton.innerText = 'Back'
