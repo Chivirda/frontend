@@ -73,29 +73,23 @@ function onPharmacyClickHandler() {
     
     for (let row of rows) {
         row.onclick = function() {
-            
             this.classList.toggle('active')
-            
-            
         }
     }
     
-    enterContractTerms()
+    choosePharmacies()
 }
 
-function selectActiveRows() {
-    
-}
-
-function enterContractTerms(activeRows) {
+function choosePharmacies() {
     const selectButton = document.querySelector('.content__button')
     
     selectButton.addEventListener('click', () => {
-        console.log('Active rows:', activeRows);
-        
+        const activeRows = document.querySelectorAll('.row.active')
+
+        for (let row of activeRows) {
+            console.log('Active rows:', row.dataset.id);
+        }
     })
-    
-    
 }
 
 function selectEntity(pharmacies, legalEntityID) {
