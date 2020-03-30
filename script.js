@@ -21,25 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
 function showEntities(entities) {
     firstColumnName.innerHTML = FIRST_COLUMN_NAME_STEP_1
     
-    console.log(entities);
-
-    for (let i = 0; i < entities.length; i++) {
+    for (let entity of entities) {
         const tr = document.createElement('tr')
         const name = document.createElement('td')
         const address = document.createElement('td')
         const city = document.createElement('td')
         const country = document.createElement('td')
 
-        name.textContent = entities[i].legalEntityName
-        address.textContent = entities[i].address1 + ' ' + entities[i].address2
-        city.textContent = entities[i].city
-        country.textContent = entities[i].country
+        name.textContent = entity.legalEntityName
+        address.textContent = entity.address1 + ' ' + entity.address2
+        city.textContent = entity.city
+        country.textContent = entity.country
 
         tr.append(name)
         tr.append(address)
         tr.append(city)
         tr.append(country)
-        tr.setAttribute('data-id', entities[i].legalEntityID)
+        tr.setAttribute('data-id', entity.legalEntityID)
+        tr.setAttribute('data-name', entity.legalEntityName)
         tr.classList.add('row')
         tr.firstChild.insertAdjacentHTML('afterbegin', '<i class="fa fa-check" aria-hidden="true"></i> &nbsp;&nbsp;&nbsp;&nbsp;')
 
@@ -60,7 +59,8 @@ function onEntitiesClickHandler() {
             this.classList.toggle('active')
             
             const legalEntityID = +this.dataset.id
-            selectEntity(pharmacies, legalEntityID)
+            const legalEntityName = this.dataset.name
+            selectEntity(pharmacies, legalEntityID, legalEntityName)
 
         }
     }
@@ -92,9 +92,10 @@ function choosePharmacies() {
     })
 }
 
-function selectEntity(pharmacies, legalEntityID) {
+function selectEntity(pharmacies, legalEntityID, legalEntityName) {
     const SECOND_STEP_HEADER = '2: Select Pharmacies'
     const selectButton = document.querySelector('.content__button')
+    const label = document.querySelector('#entityName')
 
     selectButton.addEventListener('click', () => {
         const backButton = document.querySelector('.content__button-back')
@@ -109,7 +110,8 @@ function selectEntity(pharmacies, legalEntityID) {
             .then(response => response.json())
             .then(pharmacy => showPharmacies(pharmacy, legalEntityID))
             .then(() => onPharmacyClickHandler())
-
+        
+        label.innerHTML = `for ${legalEntityName}`
         if (!backButton) {
             addBackButton()
         }

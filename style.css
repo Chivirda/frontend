@@ -64,6 +64,8 @@
 
 .content__head {
     margin-bottom: 50px;
+    display: inline-block;
+    margin-right: 20px;
 }
 
 table {
